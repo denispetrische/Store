@@ -15,15 +15,16 @@ namespace Store.Web.Data
 
         public Task CreateProduct(Product product)
         {
-            _context.Database.ExecuteSqlRaw($"CreateProduct {product.Id} " +
-                                                          $"{product.Name} " +
-                                                          $"{product.Description} " +
-                                                          $"{product.IsOnTrade} " +
-                                                          $"{product.ReceiptDate} " +
-                                                          $"{product.ExpireDate} " +
-                                                          $"{product.Amount} " +
-                                                          $"{product.Price} " +
-                                                          $"{product.Currency}");
+            string format = "yyyy-MM-dd HH:mm:ss";
+            _context.Database.ExecuteSqlRaw($"CreateProduct '{product.Id}', " +
+                                                          $"'{product.Name}', " +
+                                                          $"'{product.Description}', " +
+                                                          $"'{product.IsOnTrade}', " +
+                                                          $"'{product.ReceiptDate.ToString(format)}', " +
+                                                          $"'{product.ExpireDate.ToString(format)}', " +
+                                                          $"'{product.Amount}', " +
+                                                          $"'{product.Price}', " +
+                                                          $"'{product.Currency}'");
 
             return Task.CompletedTask;
         }
@@ -51,14 +52,14 @@ namespace Store.Web.Data
 
         public Task UpdateProduct(Product product)
         {
-            _context.Database.ExecuteSqlRaw($"UpdateProduct {product.Id} " +
-                                                          $"{product.Name} " +
-                                                          $"{product.Description} " +
-                                                          $"{product.IsOnTrade} " +
-                                                          $"{product.ReceiptDate} " +
-                                                          $"{product.ExpireDate} " +
-                                                          $"{product.Amount} " +
-                                                          $"{product.Price} " +
+            _context.Database.ExecuteSqlRaw($"UpdateProduct {product.Id}, " +
+                                                          $"{product.Name}, " +
+                                                          $"{product.Description}, " +
+                                                          $"{product.IsOnTrade}, " +
+                                                          $"{product.ReceiptDate}, " +
+                                                          $"{product.ExpireDate}, " +
+                                                          $"{product.Amount}, " +
+                                                          $"{product.Price}, " +
                                                           $"{product.Currency}");
 
             return Task.CompletedTask;

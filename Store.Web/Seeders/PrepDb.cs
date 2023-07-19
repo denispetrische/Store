@@ -3,6 +3,9 @@ using Store.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Microsoft.AspNetCore.Identity;
+using Store.Web.Models;
+using Store.Web.Constants;
+using Store.Web.Abstractions.Data;
 
 namespace Store.Web.Seeders
 {
@@ -55,6 +58,50 @@ namespace Store.Web.Seeders
                     await userManager.CreateAsync(user, password);
 
                     await userManager.AddToRoleAsync(user, "Manager");
+                }
+
+
+                //Create Products
+
+                var constants = new AppConstants();
+                var products = new Product[]
+                {
+                    new Product()
+                    {
+                        Name = "Banana",
+                        Description = "Yellow bananas from Ecuador",
+                        ReceiptDate = DateTime.Now,
+                        ExpireDate = DateTime.Now.Add(constants._expireTime),
+                        Amount = 10,
+                        Price = 10,
+                        Currency = "BYN"
+                    },
+                    new Product()
+                    {
+                        Name = "Computer",
+                        Description = "Powerfull and new",
+                        ReceiptDate = DateTime.Now,
+                        ExpireDate = DateTime.Now.Add(constants._expireTime),
+                        Amount = 1,
+                        Price = 1000,
+                        Currency = "GBP"
+                    },
+                    new Product()
+                    {
+                        Name = "Mineral Water",
+                        Description = "Made in Georgia",
+                        ReceiptDate = DateTime.Now,
+                        ExpireDate = DateTime.Now.Add(constants._expireTime),
+                        Amount = 256,
+                        Price = 5
+                    }
+                };
+
+                var productRepo = serviceScope.ServiceProvider.GetRequiredService<IProductRepo>();
+
+                foreach (var product in products)
+                {
+                    productRepo.CreateProduct(product);
                 }
             }
         }
