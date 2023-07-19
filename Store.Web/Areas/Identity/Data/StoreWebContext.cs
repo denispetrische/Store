@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Store.Web.Models;
 
 namespace Store.Web.Data;
 
 public class StoreWebContext : IdentityDbContext<IdentityUser>
 {
+    public DbSet<Product> Products { get; set; }
+    public DbSet<HistoryNote> HistoryNotes { get; set; }
+
     public StoreWebContext(DbContextOptions<StoreWebContext> options)
         : base(options)
     {
