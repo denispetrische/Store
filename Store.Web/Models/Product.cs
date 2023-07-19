@@ -14,7 +14,5 @@ namespace Store.Web.Models
         public Int64 Amount { get; set; }
         public Int64 Price { get; set; }
         public string Currency { get; set; } = "USD";
-
-
     }
 }
