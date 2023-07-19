@@ -39,6 +39,6 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-PrepDb.PrepDbInfo(app, app.Environment.IsProduction()); // Seeder
+PrepDb.PrepDbInfo(app); // Seeder
 
 app.Run();

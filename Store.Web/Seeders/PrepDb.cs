@@ -2,44 +2,60 @@
 using Store.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace Store.Web.Seeders
 {
     public static class PrepDb
     {
-        public static void PrepDbInfo(IApplicationBuilder app, bool isProd)
+        public static async void PrepDbInfo(IApplicationBuilder app)
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                SeedData(serviceScope.ServiceProvider.GetService<StoreWebContext>(), isProd);
-            }
-        }
+                //Create roles
+                var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var roles = new[] { "Admin", "Manager", "Client"};
 
-        private static void SeedData(StoreWebContext context, bool isProd)
-        {
-            if (isProd)
-            {
-                Console.WriteLine("Attempting to apply migrations");
-
-                try
+                foreach (var role in roles)
                 {
-                    context.Database.Migrate();
+                    if (!await roleManager.RoleExistsAsync(role))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(role));
+                    }
                 }
-                catch (Exception e)
+
+                //Create users
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+                //Seed Admin
+                string email = "admin@mail.ru";
+                string password = "-Qwer1234";
+
+                if (await userManager.FindByEmailAsync(email) == null )
                 {
-                    Console.WriteLine($"Could not run migrations {e.Message}");
+                    var user = new IdentityUser();
+                    user.UserName = email;
+                    user.Email = email;
+
+                    await userManager.CreateAsync(user, password);
+
+                    await userManager.AddToRoleAsync(user, "Admin");
                 }
-            }
 
-            if (!context.Users.Any())
-            {
-                Console.WriteLine("Seeding Data");
+                //Seed Manager
+                email = "manager@mail.ru";
+                password = "-Qwer1234";
 
-                context.SaveChanges();
-            }
-            else
-            {
-                Console.WriteLine("Data already in Db");
+                if (await userManager.FindByEmailAsync(email) == null)
+                {
+                    var user = new IdentityUser();
+                    user.UserName = email;
+                    user.Email = email;
+
+                    await userManager.CreateAsync(user, password);
+
+                    await userManager.AddToRoleAsync(user, "Manager");
+                }
             }
         }
     }
