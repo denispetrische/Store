@@ -99,9 +99,12 @@ namespace Store.Web.Seeders
 
                 var productRepo = serviceScope.ServiceProvider.GetRequiredService<IProductRepo>();
 
-                foreach (var product in products)
+                if (!productRepo.GetProducts().Result.Any())
                 {
-                    productRepo.CreateProduct(product);
+                    foreach (var product in products)
+                    {
+                        productRepo.CreateProduct(product);
+                    }
                 }
             }
         }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Store.Web.Abstractions.Data;
 using Store.Web.Data;
 using Store.Web.Seeders;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("StoreWebContextConnection") ?? throw new InvalidOperationException("Connection string 'StoreWebContextConnection' not found.");
@@ -18,6 +19,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IHistoryNoteRepo, HistoryNoteRepo>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 var app = builder.Build();

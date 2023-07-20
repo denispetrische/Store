@@ -31,14 +31,14 @@ namespace Store.Web.Data
 
         public Task DeleteProductById(string id)
         {
-            _context.Database.ExecuteSqlRawAsync($"DeleteProductById {id}");
+            _context.Database.ExecuteSqlRawAsync($"DeleteProductById '{id}'");
 
             return Task.CompletedTask;
         }
 
         public Task<Product> GetProductById(string id)
         {
-            Product product = _context.Products.FromSqlRaw($"GetProductById {id}").FirstOrDefault();
+            Product product = _context.Products.FromSqlRaw($"GetProductById '{id}'").FirstOrDefault();
 
             return Task.FromResult(product);
         }
@@ -52,15 +52,15 @@ namespace Store.Web.Data
 
         public Task UpdateProduct(Product product)
         {
-            _context.Database.ExecuteSqlRaw($"UpdateProduct {product.Id}, " +
-                                                          $"{product.Name}, " +
-                                                          $"{product.Description}, " +
-                                                          $"{product.IsOnTrade}, " +
-                                                          $"{product.ReceiptDate}, " +
-                                                          $"{product.ExpireDate}, " +
-                                                          $"{product.Amount}, " +
-                                                          $"{product.Price}, " +
-                                                          $"{product.Currency}");
+            _context.Database.ExecuteSqlRaw($"UpdateProduct '{product.Id}', " +
+                                                          $"'{product.Name}', " +
+                                                          $"'{product.Description}', " +
+                                                          $"'{product.IsOnTrade}', " +
+                                                          $"'{product.ReceiptDate}', " +
+                                                          $"'{product.ExpireDate}', " +
+                                                          $"'{product.Amount}', " +
+                                                          $"'{product.Price}', " +
+                                                          $"'{product.Currency}'");
 
             return Task.CompletedTask;
         }
