@@ -1,10 +1,10 @@
-﻿CREATE PROCEDURE [dbo].[CreateHistoryNote]
-	@Id uniqueidentifier = '',
-	@Message nvarchar(Max) = '',
-	@Date nvarchar(Max) = '',
-	@UserGuid uniqueidentifier = ''
+﻿CREATE PROCEDURE [dbo].[CreateHistoryNoteProcedure]
+	@Id uniqueidentifier,
+	@Message nvarchar(MAX),
+	@Date datetime2(7),
+	@UserId nvarchar(MAX)
 AS
 BEGIN
-	INSERT INTO HistoryNotes([Id],[Message],[Date],[UserGuid])
-	                  VALUES(@Id, @Message, @Date, @UserGuid)
-END;
+	INSERT INTO HistoryNotes([Id],[Message],[Date],[UserId])
+	            VALUES(@Id, @Message, @Date, @UserId)
+END
