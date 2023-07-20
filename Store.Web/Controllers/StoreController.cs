@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.Web.Abstractions.Data;
+using Store.Web.Constants;
 using Store.Web.Dtos.Product;
 using Store.Web.Models;
 
@@ -12,11 +13,13 @@ namespace Store.Web.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IProductRepo _repo;
+        private readonly AppConstants _constants;
 
         public StoreController(IMapper mapper, IProductRepo repo)
         {
             _mapper = mapper;
             _repo = repo;
+            _constants = new AppConstants();
         }
 
         public async Task<IActionResult> MainView()
@@ -36,6 +39,25 @@ namespace Store.Web.Controllers
                 Console.WriteLine("Here3");
                 _repo.UpdateProduct(product);
             }
+
+            return RedirectToAction("MainView");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddProduct()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct([FromForm] ProductCreateDto productCreateDto)
+        {
+            Console.WriteLine("Here!!!");
+            var product = _mapper.Map<Product>(productCreateDto);
+            product.ReceiptDate = DateTime.Now;
+            product.ExpireDate = DateTime.Now.Add(_constants._expireTime);
+
+            _repo.CreateProduct(product);
 
             return RedirectToAction("MainView");
         }
