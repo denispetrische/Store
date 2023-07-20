@@ -1,0 +1,28 @@
+﻿@using Store.Web.Dtos.HistoryNote;
+@model List<HistoryNoteHistoryViewDto>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Сообщение</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int counter = 1;
+
+            foreach (HistoryNoteHistoryViewDto item in Model)
+            {
+                <tr>
+                    <th scope="row">@counter</th>
+                    <td>@item.Date </td>
+                    <td>@item.Message</td>
+                </tr>
+                counter++;
+            }
+        }
+
+    </tbody>
+</table>

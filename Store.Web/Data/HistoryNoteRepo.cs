@@ -17,7 +17,7 @@ namespace Store.Web.Data
         public Task CreateHistoryNote(HistoryNote historyNote)
         {
             _context.Database.ExecuteSqlRaw($"CreateHistoryNote '{historyNote.Id}', " +
-                                                          $"'{historyNote.Message}', " +
+                                                          $"N'{historyNote.Message}', " +
                                                           $"'{historyNote.Date.ToString(format)}', " +
                                                           $"'{historyNote.UserId}'");
 
@@ -33,7 +33,7 @@ namespace Store.Web.Data
 
         public Task<List<HistoryNote>> GetHistoryNotes()
         {
-            var notes = _context.HistoryNotes.FromSqlRaw("GetHistoryNotes").ToList();
+            var notes = _context.HistoryNotes.FromSqlRaw("GetHistoryNotes").AsEnumerable().OrderBy(o => o.Date).ToList();
 
             return Task.FromResult(notes);
         }
