@@ -1,8 +1,7 @@
-﻿namespace Store.Web.Models
+﻿namespace Store.Web.Dtos.HistoryNote
 {
-    public class HistoryNote
+    public class HistoryNoteStatisticsViewDto
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
         public string Message { get; set; }
         public DateTime Date { get; set; }
         public string UserId { get; set; }
