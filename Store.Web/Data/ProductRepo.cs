@@ -50,6 +50,13 @@ namespace Store.Web.Data
             return Task.FromResult(products);
         }
 
+        public Task<List<Product>> GetProductsForMarket()
+        {
+            var products = _context.Products.FromSqlRaw("GetProductsForMarket").ToList();
+
+            return Task.FromResult(products);
+        }
+
         public Task UpdateProduct(Product product)
         {
             string format = "yyyy-MM-dd HH:mm:ss";

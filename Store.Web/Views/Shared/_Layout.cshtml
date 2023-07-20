@@ -23,7 +23,7 @@
                             if (User.IsInRole("Admin")||User.IsInRole("Manager"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Торговая площадка</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Market" asp-action="MainView">Торговая площадка</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="MainView">Склад</a>
@@ -39,7 +39,7 @@
                             if (User.IsInRole("Client"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Торговая площадка</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Market" asp-action="MainView">Торговая площадка</a>
                                 </li>
                             }
                         }
