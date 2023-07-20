@@ -24,5 +24,20 @@ namespace Store.Web.Controllers
             var products = await _repo.GetProducts();
             return View(_mapper.Map<List<Product>,List<ProductStoreViewDto>>(products));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ChangeIsOnTrade([FromQuery(Name = "param1")] Guid? id)
+        {
+            if (id != null)
+            {
+                var product = await _repo.GetProductById(id.Value.ToString());
+                Console.WriteLine("Here2");
+                product.IsOnTrade = !product.IsOnTrade;
+                Console.WriteLine("Here3");
+                _repo.UpdateProduct(product);
+            }
+
+            return RedirectToAction("MainView");
+        }
     }
 }

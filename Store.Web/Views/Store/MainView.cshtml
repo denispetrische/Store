@@ -13,6 +13,10 @@
             <th scope="col">Количество</th>
             <th scope="col">Цена</th>
             <th scope="col">Валюта</th>
+            <th scope="col">Торговая площадка</th>
+            <th> 
+                <button type="button" class="btn btn-primary" asp-controller="Store" asp-action="AddProduct">Добавить продукт</button>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -21,17 +25,29 @@
 
             foreach (ProductStoreViewDto item in Model)
             {
-                <tr>
-                    <th scope="row">@counter</th>
-                    <td>@item.Name </td>
-                    <td>@item.Description</td>
-                    <td>@item.IsOnTrade</td>
-                    <td>@item.ReceiptDate</td>
-                    <td>@item.ExpireDate</td>
-                    <td>@item.Amount</td>
-                    <td>@item.Price</td>
-                    <td>@item.Currency</td>
-                </tr>
+                    <tr>
+                        <th scope="row">@counter</th>
+                        <td>@item.Name </td>
+                        <td>@item.Description</td>
+                        <td>@item.IsOnTrade</td>
+                        <td>@item.ReceiptDate</td>
+                        <td>@item.ExpireDate</td>
+                        <td>@item.Amount</td>
+                        <td>@item.Price</td>
+                        <td>@item.Currency</td>
+                        <td>
+                            @{
+                                if (item.IsOnTrade)
+                                {
+                                <a class="btn btn-primary" asp-controller="Store" asp-action="ChangeIsOnTrade" asp-route-param1="@item.Id">Снять</a>
+                                }
+                                else
+                                {
+                                <a class="btn btn-primary" asp-controller="Store" asp-action="ChangeIsOnTrade" asp-route-param1="@item.Id">Продать</a>
+                                }
+                            }
+                        </td>
+                    </tr>
                 counter++;
             }
         }

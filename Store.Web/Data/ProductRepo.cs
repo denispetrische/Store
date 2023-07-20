@@ -38,7 +38,7 @@ namespace Store.Web.Data
 
         public Task<Product> GetProductById(string id)
         {
-            Product product = _context.Products.FromSqlRaw($"GetProductById '{id}'").FirstOrDefault();
+            Product product = _context.Products.FromSqlRaw($"GetProductById '{id}'").AsEnumerable().FirstOrDefault();
 
             return Task.FromResult(product);
         }
@@ -52,12 +52,13 @@ namespace Store.Web.Data
 
         public Task UpdateProduct(Product product)
         {
+            string format = "yyyy-MM-dd HH:mm:ss";
             _context.Database.ExecuteSqlRaw($"UpdateProduct '{product.Id}', " +
                                                           $"'{product.Name}', " +
                                                           $"'{product.Description}', " +
                                                           $"'{product.IsOnTrade}', " +
-                                                          $"'{product.ReceiptDate}', " +
-                                                          $"'{product.ExpireDate}', " +
+                                                          $"'{product.ReceiptDate.ToString(format)}', " +
+                                                          $"'{product.ExpireDate.ToString(format)}', " +
                                                           $"'{product.Amount}', " +
                                                           $"'{product.Price}', " +
                                                           $"'{product.Currency}'");
