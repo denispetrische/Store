@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[GetAllHistoryNotesLastDayProcedure]
+﻿CREATE PROCEDURE [dbo].[GetAllHistoryNotesLastDay]
 	@Date datetime2(7)
 AS
 BEGIN

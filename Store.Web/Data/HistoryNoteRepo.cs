@@ -1,4 +1,5 @@
-﻿using Store.Web.Abstractions.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Store.Web.Abstractions.Data;
 using Store.Web.Models;
 
 namespace Store.Web.Data
@@ -6,6 +7,7 @@ namespace Store.Web.Data
     public class HistoryNoteRepo : IHistoryNoteRepo
     {
         private readonly StoreWebContext _context;
+        private string format = "yyyy-MM-dd HH:mm:ss";
 
         public HistoryNoteRepo(StoreWebContext context)
         {
@@ -14,22 +16,33 @@ namespace Store.Web.Data
 
         public Task CreateHistoryNote(HistoryNote historyNote)
         {
-            throw new NotImplementedException();
+            _context.Database.ExecuteSqlRaw($"CreateHistoryNote '{historyNote.Id}', " +
+                                                          $"'{historyNote.Message}', " +
+                                                          $"'{historyNote.Date.ToString(format)}', " +
+                                                          $"'{historyNote.UserId}'");
+
+            return Task.CompletedTask;
         }
 
         public Task<List<HistoryNote>> GetAllHistoryNotesLastDay()
         {
-            throw new NotImplementedException();
+            var notes = _context.HistoryNotes.FromSqlRaw($"GetAllHistoryNotesLastDay '{DateTime.Now.AddDays(-1).ToString(format)}'").ToList();
+
+            return Task.FromResult(notes);
         }
 
         public Task<List<HistoryNote>> GetHistoryNotes()
         {
-            throw new NotImplementedException();
+            var notes = _context.HistoryNotes.FromSqlRaw("GetHistoryNotes").ToList();
+
+            return Task.FromResult(notes);
         }
 
         public Task<List<HistoryNote>> GetHistoryNotesForUserLastMonth(string id)
         {
-            throw new NotImplementedException();
+            var notes = _context.HistoryNotes.FromSqlRaw($"GetHistoryNotesForUserLastMonth '{id}', '{DateTime.Now.AddMonths(-1).ToString(format)}'").ToList();
+
+            return Task.FromResult(notes);
         }
     }
 }
