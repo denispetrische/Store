@@ -27,7 +27,7 @@ namespace Store.Web.Controllers
             
             try
             {
-                notes = _repo.GetHistoryNotes().Result;
+                notes = _repo.GetHistoryNotes().Result.OrderByDescending(n => n.Date).ToList();
                 _logger.LogInformation("HistoryMainView: notes was successfully received");
             }
             catch (Exception e)

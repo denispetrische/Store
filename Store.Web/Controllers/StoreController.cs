@@ -39,7 +39,8 @@ namespace Store.Web.Controllers
 
             try
             {
-                products = await _repoProduct.GetProducts();
+                products = _repoProduct.GetProducts().Result.OrderByDescending(p => p.ReceiptDate).ToList();
+
                 _logger.LogInformation($"Products successfully gotten");
 
             }

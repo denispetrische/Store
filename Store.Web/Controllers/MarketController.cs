@@ -34,7 +34,7 @@ namespace Store.Web.Controllers
 
             try
             {
-                products = await _productRepo.GetProductsForMarket();
+                products = _productRepo.GetProductsForMarket().Result.OrderBy(p => p.Name).ToList();
                 _logger.LogInformation("MainView: products successfully received");
             }
             catch (Exception e)
