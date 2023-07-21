@@ -60,6 +60,45 @@ namespace Store.Web.Seeders
                     await userManager.AddToRoleAsync(user, "Manager");
                 }
 
+                //Seed Clients
+                string email1 = "client1@mail.ru";
+                string email2 = "client2@mail.ru";
+                string email3 = "client3@mail.ru";
+                password = "-Qwer1234";
+
+                if (await userManager.FindByEmailAsync(email1) == null)
+                {
+                    var user = new IdentityUser();
+                    user.UserName = email1;
+                    user.Email = email1;
+
+                    await userManager.CreateAsync(user, password);
+
+                    await userManager.AddToRoleAsync(user, "Client");
+                }
+
+                if (await userManager.FindByEmailAsync(email2) == null)
+                {
+                    var user = new IdentityUser();
+                    user.UserName = email2;
+                    user.Email = email2;
+
+                    await userManager.CreateAsync(user, password);
+
+                    await userManager.AddToRoleAsync(user, "Client");
+                }
+
+                if (await userManager.FindByEmailAsync(email3) == null)
+                {
+                    var user = new IdentityUser();
+                    user.UserName = email3;
+                    user.Email = email3;
+
+                    await userManager.CreateAsync(user, password);
+
+                    await userManager.AddToRoleAsync(user, "Client");
+                }
+
 
                 //Create Products
 
