@@ -29,5 +29,18 @@ namespace Store.Web.Controllers
             var mapperNotes = _mapper.Map<List<HistoryNote>, List<HistoryNoteStatisticsViewDto>>(notesLastDay);
             return View(mapperNotes);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ClientDetailedInfoView([FromQuery(Name = "param1")] string? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("StatisticsMainView");
+            }
+
+            var notes = _repo.GetHistoryNotesForUserLastMonth(id).Result.ToList();
+
+            return View(_mapper.Map<List<HistoryNote>,List<HistoryNoteStatisticsViewDto>>(notes));
+        }
     }
 }
