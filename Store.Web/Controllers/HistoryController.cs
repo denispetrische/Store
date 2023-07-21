@@ -10,16 +10,31 @@ namespace Store.Web.Controllers
     {
         private readonly IHistoryNoteRepo _repo;
         private readonly IMapper _mapper;
+        private readonly ILogger<StoreController> _logger;
 
-        public HistoryController(IHistoryNoteRepo repo, IMapper mapper)
+        public HistoryController(IHistoryNoteRepo repo, 
+                                 IMapper mapper,
+                                 ILogger<StoreController> logger)
         {
             _repo = repo;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public IActionResult HistoryMainView()
         {
-            var notes = _repo.GetHistoryNotes().Result;
+            List<HistoryNote> notes = null;
+            
+            try
+            {
+                notes = _repo.GetHistoryNotes().Result;
+                _logger.LogInformation("HistoryMainView: notes was successfully received");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"HistoryMainView: unable to get notes. Reason: {e.Message}");
+            }
+            
             return View(_mapper.Map<List<HistoryNote>,List<HistoryNoteHistoryViewDto>>(notes));
         }
     }
