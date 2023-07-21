@@ -1,0 +1,56 @@
+﻿@using Store.Web.Dtos.Product;
+@model List<ProductStoreViewDto>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Описание</th>
+            <th scope="col">На продаже</th>
+            <th scope="col">Дата получения</th>
+            <th scope="col">Срок годности</th>
+            <th scope="col">Количество</th>
+            <th scope="col">Цена</th>
+            <th scope="col">Валюта</th>
+            <th scope="col">Торговая площадка</th>
+            <th> 
+                <a class="btn btn-primary" asp-controller="Store" asp-action="AddProduct">Добавить продукт</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int counter = 1;
+
+            foreach (ProductStoreViewDto item in Model)
+            {
+                    <tr>
+                        <th scope="row">@counter</th>
+                        <td>@item.Name </td>
+                        <td>@item.Description</td>
+                        <td>@item.IsOnTrade</td>
+                        <td>@item.ReceiptDate</td>
+                        <td>@item.ExpireDate</td>
+                        <td>@item.Amount</td>
+                        <td>@item.Price</td>
+                        <td>@item.Currency</td>
+                        <td>
+                            @{
+                                if (item.IsOnTrade)
+                                {
+                                <a class="btn btn-primary" asp-controller="Store" asp-action="ChangeIsOnTrade" asp-route-param1="@item.Id">Снять</a>
+                                }
+                                else
+                                {
+                                <a class="btn btn-primary" asp-controller="Store" asp-action="ChangeIsOnTrade" asp-route-param1="@item.Id">Продать</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                counter++;
+            }
+        }
+
+    </tbody>
+</table>

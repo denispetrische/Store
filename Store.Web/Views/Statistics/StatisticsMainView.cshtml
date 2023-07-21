@@ -1,0 +1,30 @@
+﻿@using Store.Web.Dtos.HistoryNote;
+@model List<HistoryNoteStatisticsViewDto>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Сообщение</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int counter = 1;
+
+            foreach (HistoryNoteStatisticsViewDto item in Model)
+            {
+                <tr>
+                    <th scope="row">@counter</th>
+                    <td>@item.Date </td>
+                    <td>@item.Message</td>
+                    <td><a asp-controller="Statistics" asp-action="ClientDetailedInfoView" asp-route-param1="@item.UserId">Подробнее о клиенте</a></td>
+                </tr>
+                counter++;
+            }
+        }
+
+    </tbody>
+</table>

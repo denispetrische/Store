@@ -1,0 +1,45 @@
+﻿@using Store.Web.Dtos.Product;
+
+@{
+    ViewData["Title"] = "AddProduct";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model ProductCreateDto;
+
+<h1>Добавление продукта</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-action="AddProduct" asp-controller="Store">
+
+            <div class="form-floating">
+                <input asp-for="Name" class="form-control" required />
+                <label asp-for="Name">Name</label>
+            </div>
+
+            <div class="form-floating">
+                <input asp-for="Description" class="form-control" required />
+                <label asp-for="Description">Description</label>
+            </div>
+
+            <div class="form-floating">
+                <input asp-for="Amount" class="form-control" required min="0" />
+                <label asp-for="Amount">Amount</label>
+            </div>
+
+            <div class="form-floating">
+                <input asp-for="Price" class="form-control" required min="0" />
+                <label asp-for="Price">Price</label>
+            </div>
+
+            <div class="form-floating">
+                <input asp-for="Currency" class="form-control" required maxlength="3"/>
+                <label asp-for="Currency">Currency</label>
+            </div>
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Добавить</button>
+        </form>
+    </div>
+</div>
+
