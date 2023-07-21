@@ -10,11 +10,11 @@ namespace Store.Web.Controllers
     {
         private readonly IHistoryNoteRepo _repo;
         private readonly IMapper _mapper;
-        private readonly ILogger<StoreController> _logger;
+        private readonly ILogger<HistoryController> _logger;
 
         public HistoryController(IHistoryNoteRepo repo, 
                                  IMapper mapper,
-                                 ILogger<StoreController> logger)
+                                 ILogger<HistoryController> logger)
         {
             _repo = repo;
             _mapper = mapper;
