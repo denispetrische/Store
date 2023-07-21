@@ -10,6 +10,7 @@
             <th scope="col">Количество</th>
             <th scope="col">Цена</th>
             <th scope="col">Валюта</th>
+            <th scope="col">Действие</th>
         </tr>
     </thead>
     <tbody>
@@ -25,6 +26,19 @@
                     <td>@item.Amount</td>
                     <td>@item.Price</td>
                     <td>@item.Currency</td>
+                    @{
+                        if (User.IsInRole("Client"))
+                        {
+                            if (item.Amount > 0)
+                            {
+                                <td><a asp-controller="Market" asp-action="BuyProduct" asp-route-param1="@item.Id">Купить</a></td>
+                            }
+                            else
+                            {
+                                <td>Товар закончился</td>
+                            }
+                        }
+                    }
                 </tr>
                 counter++;
             }
