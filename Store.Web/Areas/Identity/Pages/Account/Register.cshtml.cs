@@ -18,6 +18,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Store.Web.Abstractions.Data;
+using Store.Web.Data;
+using Store.Web.Models;
 
 namespace Store.Web.Areas.Identity.Pages.Account
 {
@@ -29,13 +32,15 @@ namespace Store.Web.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IHistoryNoteRepo _historyNoteRepo;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IHistoryNoteRepo historyNoteRepo)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -43,6 +48,7 @@ namespace Store.Web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _historyNoteRepo = historyNoteRepo;
         }
 
         /// <summary>
@@ -121,6 +127,23 @@ namespace Store.Web.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+
+                    HistoryNote note = new HistoryNote()
+                    {
+                        Message = $"Пользователь зарегистрировался. Пользователь:{User.Identity.Name}",
+                        Date = DateTime.Now,
+                        UserId = _userManager.GetUserId(HttpContext.User)
+                    };
+
+                    try
+                    {
+                        _historyNoteRepo.CreateHistoryNote(note);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError($"Can't add history note while user register. Reason: {e.Message}");
+                    }
 
                     await _userManager.AddToRoleAsync(user, "Client");
 

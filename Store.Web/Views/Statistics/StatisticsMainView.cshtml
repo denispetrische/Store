@@ -1,5 +1,30 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using Store.Web.Dtos.HistoryNote;
+@model List<HistoryNoteHistoryViewDto>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Сообщение</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int counter = 1;
+
+            foreach (HistoryNoteHistoryViewDto item in Model)
+            {
+                <tr>
+                    <th scope="row">@counter</th>
+                    <td>@item.Date </td>
+                    <td>@item.Message</td>
+                    <td><a>Подробнее о клиенте</a></td>
+                </tr>
+                counter++;
+            }
+        }
+
+    </tbody>
+</table>

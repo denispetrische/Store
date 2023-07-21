@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Store.Web.Abstractions.Data;
+using Store.Web.Models;
 
 namespace Store.Web.Areas.Identity.Pages.Account
 {
@@ -21,11 +23,18 @@ namespace Store.Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IHistoryNoteRepo _historyNoteRepo;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, 
+                          ILogger<LoginModel> logger, 
+                          IHistoryNoteRepo historyNoteRepo,
+                          UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _historyNoteRepo = historyNoteRepo;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -115,6 +124,23 @@ namespace Store.Web.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    HistoryNote note = new HistoryNote()
+                    {
+                        Message = $"Пользователь вошёл в аккаунт. Пользователь:{User.Identity.Name}",
+                        Date = DateTime.Now,
+                        UserId = _userManager.GetUserId(HttpContext.User)
+                    };
+
+                    try
+                    {
+                        _historyNoteRepo.CreateHistoryNote(note);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError($"Can't add history note while user login Reason: {e.Message}");
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
