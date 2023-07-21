@@ -1,5 +1,5 @@
 ﻿@using Store.Web.Dtos.HistoryNote;
-@model List<HistoryNoteHistoryViewDto>
+@model List<HistoryNoteStatisticsViewDto>
 
 <table class="table">
     <thead>
@@ -14,7 +14,7 @@
         @{
             int counter = 1;
 
-            foreach (HistoryNoteHistoryViewDto item in Model)
+            foreach (HistoryNoteStatisticsViewDto item in Model)
             {
                 <tr>
                     <th scope="row">@counter</th>

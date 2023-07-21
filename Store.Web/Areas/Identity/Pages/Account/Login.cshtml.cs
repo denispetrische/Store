@@ -125,11 +125,13 @@ namespace Store.Web.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
 
+                    var currentUser = _userManager.Users.FirstOrDefault(u => u.Email == Input.Email);
+
                     HistoryNote note = new HistoryNote()
                     {
-                        Message = $"Пользователь вошёл в аккаунт. Пользователь:{User.Identity.Name}",
+                        Message = $"Пользователь вошёл в аккаунт. Пользователь:{Input.Email}",
                         Date = DateTime.Now,
-                        UserId = _userManager.GetUserId(HttpContext.User)
+                        UserId = currentUser.Id
                     };
 
                     try

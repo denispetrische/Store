@@ -128,12 +128,13 @@ namespace Store.Web.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    var currentUser = _userManager.Users.FirstOrDefault(u => u.Email == Input.Email);
 
                     HistoryNote note = new HistoryNote()
                     {
-                        Message = $"Пользователь зарегистрировался. Пользователь:{User.Identity.Name}",
+                        Message = $"Пользователь зарегистрировался. Пользователь:{Input.Email}",
                         Date = DateTime.Now,
-                        UserId = _userManager.GetUserId(HttpContext.User)
+                        UserId = currentUser.Id
                     };
 
                     try
