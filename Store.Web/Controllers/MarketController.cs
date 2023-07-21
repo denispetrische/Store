@@ -13,18 +13,35 @@ namespace Store.Web.Controllers
         private readonly IProductRepo _productRepo;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IHistoryNoteRepo _historyNoteRepo;
+        private readonly ILogger<MarketController> _logger;
 
-        public MarketController(IMapper mapper, IProductRepo repo, UserManager<IdentityUser> userManager, IHistoryNoteRepo historyNoteRepo)
+        public MarketController(IMapper mapper, 
+                                IProductRepo repo, 
+                                UserManager<IdentityUser> userManager, 
+                                IHistoryNoteRepo historyNoteRepo,
+                                ILogger<MarketController> logger)
         {
             _mapper = mapper;
             _productRepo = repo;
             _userManager = userManager;
             _historyNoteRepo = historyNoteRepo;
+            _logger = logger;
         }
 
         public async Task<IActionResult> MainView()
         {
-            var products = await _productRepo.GetProductsForMarket();
+            List<Product> products = null;
+
+            try
+            {
+                products = await _productRepo.GetProductsForMarket();
+                _logger.LogInformation("MainView: products successfully received");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"MainView: cannot get products. Reason: {e.Message}");
+            }
+            
             return View(_mapper.Map<List<Product>, List<ProductMarketViewDto>>(products));
         }
 
@@ -36,7 +53,17 @@ namespace Store.Web.Controllers
                 return RedirectToAction("MainView");
             }
 
-            var product = _productRepo.GetProductById(id.Value.ToString()).Result;
+            Product product = null;
+
+            try
+            {
+                product = _productRepo.GetProductById(id.Value.ToString()).Result;
+                _logger.LogInformation("MainView: product successfully received");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"MainView: cannot get product. Reason: {e.Message}");
+            }
 
             if (product == null)
             {
@@ -54,8 +81,16 @@ namespace Store.Web.Controllers
                     UserId = _userManager.GetUserId(HttpContext.User)
                 };
 
-                _historyNoteRepo.CreateHistoryNote(note);
-                _productRepo.UpdateProduct(product);
+                try
+                {
+                    _historyNoteRepo.CreateHistoryNote(note);
+                    _productRepo.UpdateProduct(product);
+                    _logger.LogInformation("MainView: product is successfully bought");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"MainView: cannot buy product or note that. Reason: {e.Message}");
+                }
             }
 
             return RedirectToAction("MainView");
