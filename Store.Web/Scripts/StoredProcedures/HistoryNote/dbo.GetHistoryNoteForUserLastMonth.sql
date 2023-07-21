@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[GetHistoryNotesForUserLastMonth]
+﻿CREATE PROCEDURE [dbo].[GetHistoryNoteForUserLastMonth]
 	@UserId nvarchar(MAX),
 	@Date datetime2(7)
 AS
