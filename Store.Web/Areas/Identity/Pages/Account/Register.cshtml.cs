@@ -32,7 +32,7 @@ namespace Store.Web.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly IHistoryNoteRepo _historyNoteRepo;
+        private readonly IHistoryNoteRepo<HistoryNote> _historyNoteRepo;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -40,7 +40,7 @@ namespace Store.Web.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IHistoryNoteRepo historyNoteRepo)
+            IHistoryNoteRepo<HistoryNote> historyNoteRepo)
         {
             _userManager = userManager;
             _userStore = userStore;

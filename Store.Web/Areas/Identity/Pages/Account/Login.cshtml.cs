@@ -23,12 +23,12 @@ namespace Store.Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly IHistoryNoteRepo _historyNoteRepo;
+        private readonly IHistoryNoteRepo<HistoryNote> _historyNoteRepo;
         private readonly UserManager<IdentityUser> _userManager;
 
         public LoginModel(SignInManager<IdentityUser> signInManager, 
                           ILogger<LoginModel> logger, 
-                          IHistoryNoteRepo historyNoteRepo,
+                          IHistoryNoteRepo<HistoryNote> historyNoteRepo,
                           UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;

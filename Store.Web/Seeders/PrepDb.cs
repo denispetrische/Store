@@ -136,7 +136,7 @@ namespace Store.Web.Seeders
                     }
                 };
 
-                var productRepo = serviceScope.ServiceProvider.GetRequiredService<IProductRepo>();
+                var productRepo = serviceScope.ServiceProvider.GetRequiredService<IProductRepo<Product>>();
 
                 if (!productRepo.GetProducts().Result.Any())
                 {

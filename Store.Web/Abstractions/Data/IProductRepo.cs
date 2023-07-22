@@ -2,13 +2,13 @@
 
 namespace Store.Web.Abstractions.Data
 {
-    public interface IProductRepo
+    public interface IProductRepo<T> where T : Product
     {
-        Task<List<Product>> GetProducts();
-        Task<List<Product>> GetProductsForMarket();
-        Task<Product> GetProductById(string id);
-        Task CreateProduct(Product product);
-        Task UpdateProduct(Product product);
+        Task<IReadOnlyList<T>> GetProducts();
+        Task<IReadOnlyList<T>> GetProductsForMarket();
+        Task<T> GetProductById(string id);
+        Task CreateProduct(T product);
+        Task UpdateProduct(T product);
         Task DeleteProductById(string id);
     }
 }

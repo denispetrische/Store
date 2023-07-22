@@ -4,19 +4,19 @@ using Store.Web.Models;
 
 namespace Store.Web.Data
 {
-    public class ProductRepo : IProductRepo
+    public class ProductRepo : IProductRepo<Product>
     {
         private readonly StoreWebContext _context;
+        private string format = "yyyy-MM-dd HH:mm:ss";
 
         public ProductRepo(StoreWebContext context)
         {
             _context = context;
         }
 
-        public Task CreateProduct(Product product)
+        public async Task CreateProduct(Product product)
         {
-            string format = "yyyy-MM-dd HH:mm:ss";
-            _context.Database.ExecuteSqlRaw($"CreateProduct '{product.Id}', " +
+            await _context.Database.ExecuteSqlRawAsync($"CreateProduct '{product.Id}', " +
                                                           $"'{product.Name}', " +
                                                           $"'{product.Description}', " +
                                                           $"'{product.IsOnTrade}', " +
@@ -25,42 +25,37 @@ namespace Store.Web.Data
                                                           $"'{product.Amount}', " +
                                                           $"'{product.Price}', " +
                                                           $"'{product.Currency}'");
-
-            return Task.CompletedTask;
         }
 
-        public Task DeleteProductById(string id)
+        public async Task DeleteProductById(string id)
         {
-            _context.Database.ExecuteSqlRawAsync($"DeleteProductById '{id}'");
-
-            return Task.CompletedTask;
+            await _context.Database.ExecuteSqlRawAsync($"DeleteProductById '{id}'");
         }
 
-        public Task<Product> GetProductById(string id)
+        public async Task<Product> GetProductById(string id)
         {
             Product product = _context.Products.FromSqlRaw($"GetProductById '{id}'").AsEnumerable().FirstOrDefault();
 
-            return Task.FromResult(product);
+            return product;
         }
 
-        public Task<List<Product>> GetProducts()
+        public async Task<IReadOnlyList<Product>> GetProducts()
         {
             var products = _context.Products.FromSqlRaw("GetProducts").ToList();
 
-            return Task.FromResult(products);
+            return products;
         }
 
-        public Task<List<Product>> GetProductsForMarket()
+        public async Task<IReadOnlyList<Product>> GetProductsForMarket()
         {
             var products = _context.Products.FromSqlRaw("GetProductsForMarket").ToList();
 
-            return Task.FromResult(products);
+            return products;
         }
 
-        public Task UpdateProduct(Product product)
+        public async Task UpdateProduct(Product product)
         {
-            string format = "yyyy-MM-dd HH:mm:ss";
-            _context.Database.ExecuteSqlRaw($"UpdateProduct '{product.Id}', " +
+            await _context.Database.ExecuteSqlRawAsync($"UpdateProduct '{product.Id}', " +
                                                           $"'{product.Name}', " +
                                                           $"'{product.Description}', " +
                                                           $"'{product.IsOnTrade}', " +
@@ -69,8 +64,6 @@ namespace Store.Web.Data
                                                           $"'{product.Amount}', " +
                                                           $"'{product.Price}', " +
                                                           $"'{product.Currency}'");
-
-            return Task.CompletedTask;
         }
     }
 }

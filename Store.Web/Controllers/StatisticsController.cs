@@ -9,13 +9,13 @@ namespace Store.Web.Controllers
 {
     public class StatisticsController : Controller
     {
-        private readonly IHistoryNoteRepo _repo;
+        private readonly IHistoryNoteRepo<HistoryNote> _repo;
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<StatisticsController> _logger;
 
-        public StatisticsController(IHistoryNoteRepo repo, 
+        public StatisticsController(IHistoryNoteRepo<HistoryNote> repo, 
                                     IMapper mapper, 
                                     UserManager<IdentityUser> userManager, 
                                     RoleManager<IdentityRole> roleManager,

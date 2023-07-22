@@ -13,15 +13,15 @@ namespace Store.Web.Controllers
     public class StoreController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IProductRepo _repoProduct;
-        private readonly IHistoryNoteRepo _repoHistory;
+        private readonly IProductRepo<Product> _repoProduct;
+        private readonly IHistoryNoteRepo<HistoryNote> _repoHistory;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppConstants _constants;
         private readonly ILogger<StoreController> _logger;
 
         public StoreController(IMapper mapper, 
-                               IProductRepo repoProduct, 
-                               IHistoryNoteRepo repoHistory, 
+                               IProductRepo<Product> repoProduct, 
+                               IHistoryNoteRepo<HistoryNote> repoHistory, 
                                UserManager<IdentityUser> userManager,
                                ILogger<StoreController> logger)
         {
@@ -72,9 +72,10 @@ namespace Store.Web.Controllers
             {
                 _logger.LogError($"ChangeIsOnTrade: product was not received. Reason: {e.Message}");
             }
-            
+
             if (product == null)
             {
+                _logger.LogInformation("Product if null");
                 return RedirectToAction("MainView");
             }
 
@@ -109,13 +110,14 @@ namespace Store.Web.Controllers
                 catch (Exception e)
                 {
                     _logger.LogError($"ChangeIsOnTrade: unable to create note, Reason: {e.Message}");
-                }                
+                }
 
                 return RedirectToAction("MainView");
             }
 
             if (DateTime.Now >= product.ExpireDate)
             {
+                _logger.LogInformation($"Product is corrupted. Product.ExpireDate = {product.ExpireDate}");
                 return RedirectToAction("MainView");
             }
 
@@ -130,8 +132,8 @@ namespace Store.Web.Controllers
 
             try
             {
-                _repoHistory.CreateHistoryNote(note);
-                _repoProduct.UpdateProduct(product);
+                await _repoProduct.UpdateProduct(product);
+                await _repoHistory.CreateHistoryNote(note);
                 _logger.LogInformation($"ChangeIsOnTrade: product was successfulyy updated and note was succesfully created");
             }
             catch (Exception e)

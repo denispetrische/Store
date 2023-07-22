@@ -2,11 +2,11 @@
 
 namespace Store.Web.Abstractions.Data
 {
-    public interface IHistoryNoteRepo
+    public interface IHistoryNoteRepo<T> where T : HistoryNote
     {
-        Task<List<HistoryNote>> GetHistoryNotes();
-        Task CreateHistoryNote(HistoryNote historyNote);
-        Task<List<HistoryNote>> GetHistoryNotesForUserLastMonth(string id);
-        Task<List<HistoryNote>> GetAllHistoryNotesLastDay();
+        Task<IReadOnlyList<T>> GetHistoryNotes();
+        Task CreateHistoryNote(T historyNote);
+        Task<IReadOnlyList<T>> GetHistoryNotesForUserLastMonth(string id);
+        Task<IReadOnlyList<T>> GetAllHistoryNotesLastDay();
     }
 }

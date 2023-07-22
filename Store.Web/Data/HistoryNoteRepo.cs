@@ -4,7 +4,7 @@ using Store.Web.Models;
 
 namespace Store.Web.Data
 {
-    public class HistoryNoteRepo : IHistoryNoteRepo
+    public class HistoryNoteRepo : IHistoryNoteRepo<HistoryNote>
     {
         private readonly StoreWebContext _context;
         private string format = "yyyy-MM-dd HH:mm:ss";
@@ -14,35 +14,33 @@ namespace Store.Web.Data
             _context = context;
         }
 
-        public Task CreateHistoryNote(HistoryNote historyNote)
+        public async Task CreateHistoryNote(HistoryNote historyNote)
         {
-            _context.Database.ExecuteSqlRaw($"CreateHistoryNote '{historyNote.Id}', " +
+            await _context.Database.ExecuteSqlRawAsync($"CreateHistoryNote '{historyNote.Id}', " +
                                                           $"N'{historyNote.Message}', " +
                                                           $"'{historyNote.Date.ToString(format)}', " +
                                                           $"'{historyNote.UserId}'");
-
-            return Task.CompletedTask;
         }
 
-        public Task<List<HistoryNote>> GetAllHistoryNotesLastDay()
+        public async Task<IReadOnlyList<HistoryNote>> GetAllHistoryNotesLastDay()
         {
             var notes = _context.HistoryNotes.FromSqlRaw($"GetAllHistoryNotesLastDay '{DateTime.Now.AddDays(-1).ToString(format)}'").ToList();
 
-            return Task.FromResult(notes);
+            return notes;
         }
 
-        public Task<List<HistoryNote>> GetHistoryNotes()
+        public async Task<IReadOnlyList<HistoryNote>> GetHistoryNotes()
         {
             var notes = _context.HistoryNotes.FromSqlRaw("GetHistoryNotes").ToList();
 
-            return Task.FromResult(notes);
+            return notes;
         }
 
-        public Task<List<HistoryNote>> GetHistoryNotesForUserLastMonth(string id)
+        public async Task<IReadOnlyList<HistoryNote>> GetHistoryNotesForUserLastMonth(string id)
         {
             var notes = _context.HistoryNotes.FromSqlRaw($"GetHistoryNotesForUserLastMonth '{id}', '{DateTime.Now.AddMonths(-1).ToString(format)}'").ToList();
 
-            return Task.FromResult(notes);
+            return notes;
         }
     }
 }

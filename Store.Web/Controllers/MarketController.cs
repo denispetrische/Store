@@ -10,15 +10,15 @@ namespace Store.Web.Controllers
     public class MarketController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly IProductRepo _productRepo;
+        private readonly IProductRepo<Product> _productRepo;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IHistoryNoteRepo _historyNoteRepo;
+        private readonly IHistoryNoteRepo<HistoryNote> _historyNoteRepo;
         private readonly ILogger<MarketController> _logger;
 
         public MarketController(IMapper mapper, 
-                                IProductRepo repo, 
+                                IProductRepo<Product> repo, 
                                 UserManager<IdentityUser> userManager, 
-                                IHistoryNoteRepo historyNoteRepo,
+                                IHistoryNoteRepo<HistoryNote> historyNoteRepo,
                                 ILogger<MarketController> logger)
         {
             _mapper = mapper;
@@ -57,7 +57,7 @@ namespace Store.Web.Controllers
 
             try
             {
-                product = _productRepo.GetProductById(id.Value.ToString()).Result;
+                product = await _productRepo.GetProductById(id.Value.ToString());
                 _logger.LogInformation("MainView: product successfully received");
             }
             catch (Exception e)
@@ -83,8 +83,8 @@ namespace Store.Web.Controllers
 
                 try
                 {
-                    _historyNoteRepo.CreateHistoryNote(note);
-                    _productRepo.UpdateProduct(product);
+                    await _productRepo.UpdateProduct(product);
+                    await _historyNoteRepo.CreateHistoryNote(note);
                     _logger.LogInformation("MainView: product is successfully bought");
                 }
                 catch (Exception e)

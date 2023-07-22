@@ -8,11 +8,11 @@ namespace Store.Web.Controllers
 {
     public class HistoryController : Controller
     {
-        private readonly IHistoryNoteRepo _repo;
+        private readonly IHistoryNoteRepo<HistoryNote> _repo;
         private readonly IMapper _mapper;
         private readonly ILogger<HistoryController> _logger;
 
-        public HistoryController(IHistoryNoteRepo repo, 
+        public HistoryController(IHistoryNoteRepo<HistoryNote> repo, 
                                  IMapper mapper,
                                  ILogger<HistoryController> logger)
         {
