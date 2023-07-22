@@ -30,19 +30,18 @@ namespace Store.Web.Controllers
 
         public async Task<IActionResult> MainView()
         {
-            List<Product> products = null;
-
             try
             {
-                products = _productRepo.GetProductsForMarket().Result.ToList();
+                var products = _productRepo.GetProductsForMarket().Result.ToList();
                 _logger.LogInformation("MainView: products successfully received");
+
+                return View(_mapper.Map<List<Product>, List<ProductMarketViewDto>>(products));
             }
             catch (Exception e)
             {
                 _logger.LogError($"MainView: cannot get products. Reason: {e.Message}");
+                return BadRequest();
             }
-            
-            return View(_mapper.Map<List<Product>, List<ProductMarketViewDto>>(products));
         }
 
         [HttpGet]

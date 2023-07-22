@@ -35,21 +35,20 @@ namespace Store.Web.Controllers
 
         public async Task<IActionResult> MainView()
         {
-            List<Product> products = null;
-
             try
             {
-                products = _repoProduct.GetProducts().Result.ToList();
-
+                var products = await _repoProduct.GetProducts();
+                var mappedProducts = _mapper.Map<List<Product>, List<ProductStoreViewDto>>(products.ToList());
                 _logger.LogInformation($"Products successfully gotten");
+
+                return View(mappedProducts);
 
             }
             catch (Exception e)
             {
                 _logger.LogError($"Can't get products from products repo. Reason: {e.Message}");
+                return BadRequest();
             }
-
-            return View(_mapper.Map<List<Product>,List<ProductStoreViewDto>>(products));
         }
 
         [HttpGet]
@@ -87,7 +86,7 @@ namespace Store.Web.Controllers
 
                 try
                 {
-                    _repoProduct.UpdateProduct(product);
+                    await _repoProduct.UpdateProduct(product);
                     _logger.LogInformation($"ChangeIsOnTrade: product was successfully updated");
                 }
                 catch (Exception e)
@@ -104,7 +103,7 @@ namespace Store.Web.Controllers
 
                 try
                 {
-                    _repoHistory.CreateHistoryNote(note);
+                    await _repoHistory.CreateHistoryNote(note);
                     _logger.LogInformation($"ChangeIsOnTrade: note was succesfully created");
                 }
                 catch (Exception e)
@@ -159,7 +158,7 @@ namespace Store.Web.Controllers
 
             try
             {
-                _repoProduct.CreateProduct(product);
+                await _repoProduct.CreateProduct(product);
                 _logger.LogInformation("AddProduct: product was succesfully created");
 
             }

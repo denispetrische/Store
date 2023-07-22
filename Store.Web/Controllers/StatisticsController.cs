@@ -30,21 +30,20 @@ namespace Store.Web.Controllers
 
         public async Task<IActionResult> StatisticsMainView()
         {
-            List<HistoryNoteStatisticsViewDto> mapperNotes = null;
-
             try
             {
                 var clientsId = _userManager.GetUsersInRoleAsync("Client").Result.Select(u => u.Id);
                 var notesLastDay = _repo.GetAllHistoryNotesLastDay().Result.Where(n => clientsId.Contains(n.UserId)).ToList();
-                mapperNotes = _mapper.Map<List<HistoryNote>, List<HistoryNoteStatisticsViewDto>>(notesLastDay);
+                var mapperNotes = _mapper.Map<List<HistoryNote>, List<HistoryNoteStatisticsViewDto>>(notesLastDay);
                 _logger.LogInformation("StatisticsMainView: successfull");
+
+                return View(mapperNotes);
             }
             catch (Exception e)
             {
                 _logger.LogError($"StatisticsMainView: error occured. Reason: {e.Message}");
+                return BadRequest();
             }
-            
-            return View(mapperNotes);
         }
 
         [HttpGet]
@@ -55,19 +54,18 @@ namespace Store.Web.Controllers
                 return RedirectToAction("StatisticsMainView");
             }
 
-            List<HistoryNote> notes = null;
-
             try
             {
-                notes = _repo.GetHistoryNotesForUserLastMonth(id).Result.ToList();
+                var notes = _repo.GetHistoryNotesForUserLastMonth(id).Result.ToList();
                 _logger.LogInformation("ClientDetailedInfoView: notes successfully received");
+
+                return View(_mapper.Map<List<HistoryNote>, List<HistoryNoteStatisticsViewDto>>(notes));
             }
             catch (Exception e)
             {
                 _logger.LogError($"ClientDetailedInfoView: cannot get notes. Reason: {e.Message}");
+                return BadRequest();
             }
-
-            return View(_mapper.Map<List<HistoryNote>,List<HistoryNoteStatisticsViewDto>>(notes));
         }
     }
 }

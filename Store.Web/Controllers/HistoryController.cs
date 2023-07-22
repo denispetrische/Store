@@ -23,19 +23,19 @@ namespace Store.Web.Controllers
 
         public IActionResult HistoryMainView()
         {
-            List<HistoryNote> notes = null;
-            
+           
             try
             {
-                notes = _repo.GetHistoryNotes().Result.ToList();
+                var notes = _repo.GetHistoryNotes().Result.ToList();
                 _logger.LogInformation("HistoryMainView: notes was successfully received");
+
+                return View(_mapper.Map<List<HistoryNote>, List<HistoryNoteHistoryViewDto>>(notes));
             }
             catch (Exception e)
             {
                 _logger.LogError($"HistoryMainView: unable to get notes. Reason: {e.Message}");
-            }
-            
-            return View(_mapper.Map<List<HistoryNote>,List<HistoryNoteHistoryViewDto>>(notes));
+                return BadRequest();
+            }            
         }
     }
 }
