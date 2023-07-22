@@ -33,7 +33,7 @@ namespace Store.Web.Data
 
         public Task<List<HistoryNote>> GetHistoryNotes()
         {
-            var notes = _context.HistoryNotes.FromSqlRaw("GetHistoryNotes").AsEnumerable().OrderBy(o => o.Date).ToList();
+            var notes = _context.HistoryNotes.FromSqlRaw("GetHistoryNotes").ToList();
 
             return Task.FromResult(notes);
         }

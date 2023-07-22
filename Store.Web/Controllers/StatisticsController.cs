@@ -35,7 +35,7 @@ namespace Store.Web.Controllers
             try
             {
                 var clientsId = _userManager.GetUsersInRoleAsync("Client").Result.Select(u => u.Id);
-                var notesLastDay = _repo.GetAllHistoryNotesLastDay().Result.Where(n => clientsId.Contains(n.UserId)).OrderByDescending(n => n.Date).ToList();
+                var notesLastDay = _repo.GetAllHistoryNotesLastDay().Result.Where(n => clientsId.Contains(n.UserId)).ToList();
                 mapperNotes = _mapper.Map<List<HistoryNote>, List<HistoryNoteStatisticsViewDto>>(notesLastDay);
                 _logger.LogInformation("StatisticsMainView: successfull");
             }
@@ -59,7 +59,7 @@ namespace Store.Web.Controllers
 
             try
             {
-                notes = _repo.GetHistoryNotesForUserLastMonth(id).Result.OrderByDescending(n => n.Date).ToList();
+                notes = _repo.GetHistoryNotesForUserLastMonth(id).Result.ToList();
                 _logger.LogInformation("ClientDetailedInfoView: notes successfully received");
             }
             catch (Exception e)
