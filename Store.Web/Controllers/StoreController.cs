@@ -1,144 +1,32 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Store.Web.Abstractions.Data;
-using Store.Web.Constants;
 using Store.Web.Dtos.Product;
-using Store.Web.Models;
-using Microsoft.AspNetCore.Identity;
+using MediatR;
+using Store.Web.Application.Product.Queries;
+using Store.Web.Application.Product.Commands;
 
 namespace Store.Web.Controllers
 {
     [Authorize(Roles ="Manager, Admin")]
     public class StoreController : Controller
     {
-        private readonly IMapper _mapper;
-        private readonly IProductRepo<Product> _repoProduct;
-        private readonly IHistoryNoteRepo<HistoryNote> _repoHistory;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly AppConstants _constants;
-        private readonly ILogger<StoreController> _logger;
+        private readonly IMediator _mediator;
 
-        public StoreController(IMapper mapper, 
-                               IProductRepo<Product> repoProduct, 
-                               IHistoryNoteRepo<HistoryNote> repoHistory, 
-                               UserManager<IdentityUser> userManager,
-                               ILogger<StoreController> logger)
+        public StoreController(IMediator mediator)
         {
-            _mapper = mapper;
-            _repoProduct = repoProduct;
-            _repoHistory = repoHistory;
-            _userManager = userManager;
-            _constants = new AppConstants();
-            _logger = logger;
+            _mediator = mediator;
         }
 
         public async Task<IActionResult> MainView()
         {
-            try
-            {
-                var products = await _repoProduct.GetProducts();
-                var mappedProducts = _mapper.Map<List<Product>, List<ProductStoreViewDto>>(products.ToList());
-                _logger.LogInformation($"Products successfully gotten");
-
-                return View(mappedProducts);
-
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"Can't get products from products repo. Reason: {e.Message}");
-                return BadRequest();
-            }
+            var products = await _mediator.Send(new GetProductsQuery());
+            return View(products);
         }
 
         [HttpGet]
         public async Task<IActionResult> ChangeIsOnTrade([FromQuery(Name = "param1")] Guid? id)
         {
-            if (id == null)
-            {
-                _logger.LogInformation("ChangeIsOnTrade: id == null");
-                return RedirectToAction("MainView");
-            }
-
-            Product product = null;
-
-            try
-            {
-                product = await _repoProduct.GetProductById(id.Value.ToString());
-                _logger.LogInformation("ChangeIsOnTrade: product was received");
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"ChangeIsOnTrade: product was not received. Reason: {e.Message}");
-            }
-
-            if (product == null)
-            {
-                _logger.LogInformation("Product if null");
-                return RedirectToAction("MainView");
-            }
-
-            HistoryNote note;
-
-            if (product.IsOnTrade)
-            {
-                product.IsOnTrade = !product.IsOnTrade;
-
-                try
-                {
-                    await _repoProduct.UpdateProduct(product);
-                    _logger.LogInformation($"ChangeIsOnTrade: product was successfully updated");
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError($"ChangeIsOnTrade: unable to update product, Reason: {e.Message}");
-                }
-
-                note = new HistoryNote()
-                {
-                    Message = $"Продукт {product.Name} перестал продаваться. Пользователь:{User.Identity.Name}",
-                    Date = DateTime.Now,
-                    UserId = _userManager.GetUserId(HttpContext.User)
-                };
-
-                try
-                {
-                    await _repoHistory.CreateHistoryNote(note);
-                    _logger.LogInformation($"ChangeIsOnTrade: note was succesfully created");
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError($"ChangeIsOnTrade: unable to create note, Reason: {e.Message}");
-                }
-
-                return RedirectToAction("MainView");
-            }
-
-            if (DateTime.Now >= product.ExpireDate)
-            {
-                _logger.LogInformation($"Product is corrupted. Product.ExpireDate = {product.ExpireDate}");
-                return RedirectToAction("MainView");
-            }
-
-            product.IsOnTrade = !product.IsOnTrade;
-
-            note = new HistoryNote()
-            {
-                Message = $"Продукт {product.Name} начал продаваться. Пользователь:{User.Identity.Name}",
-                Date = DateTime.Now,
-                UserId = _userManager.GetUserId(HttpContext.User)
-            };
-
-            try
-            {
-                await _repoProduct.UpdateProduct(product);
-                await _repoHistory.CreateHistoryNote(note);
-                _logger.LogInformation($"ChangeIsOnTrade: product was successfulyy updated and note was succesfully created");
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"ChangeIsOnTrade: unable to create note or update product, Reason: {e.Message}");
-            }
+            await _mediator.Send(new StoreChangeIsOnTradeCommand() { Id = id, User = User });
 
             return RedirectToAction("MainView");
         }
@@ -152,21 +40,7 @@ namespace Store.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromForm] ProductCreateDto productCreateDto)
         {
-            var product = _mapper.Map<Product>(productCreateDto);
-            product.ReceiptDate = DateTime.Now;
-            product.ExpireDate = DateTime.Now.Add(_constants._expireTime);
-
-            try
-            {
-                await _repoProduct.CreateProduct(product);
-                _logger.LogInformation("AddProduct: product was succesfully created");
-
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"AddProduct: unable to create product. Reason: {e.Message}");
-            }
-
+            await _mediator.Send(new AddProductCommand() { ProductDto = productCreateDto });
             return RedirectToAction("MainView");
         }
     }
