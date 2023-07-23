@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Application\HistoryNote\Commands\" />
-    <Folder Include="Application\HistoryNote\Queries\" />
     <Folder Include="Scripts\StoredProcedures\HistoryNote\" />
   </ItemGroup>
 

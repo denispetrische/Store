@@ -10,12 +10,12 @@ namespace Store.Web.Application.Product.Commands
     {
         private readonly ILogger<StoreChangeIsOnTradeCommandHandler> _logger;
         private readonly IProductRepo<Models.Product> _repoProduct;
-        private readonly IHistoryNoteRepo<HistoryNote> _repoHistory;
+        private readonly IHistoryNoteRepo<Models.HistoryNote> _repoHistory;
         private readonly UserManager<IdentityUser> _userManager;
 
         public StoreChangeIsOnTradeCommandHandler(ILogger<StoreChangeIsOnTradeCommandHandler> logger,
                                                   IProductRepo<Models.Product> repoProduct,
-                                                  IHistoryNoteRepo<HistoryNote> repoHistory,
+                                                  IHistoryNoteRepo<Models.HistoryNote> repoHistory,
                                                   UserManager<IdentityUser> userManager)
         {
             _logger = logger;
@@ -51,7 +51,7 @@ namespace Store.Web.Application.Product.Commands
                 return;
             }
 
-            HistoryNote note;
+            Models.HistoryNote note;
 
             if (product.IsOnTrade)
             {
@@ -68,7 +68,7 @@ namespace Store.Web.Application.Product.Commands
                     return;
                 }
 
-                note = new HistoryNote()
+                note = new Models.HistoryNote()
                 {
                     Message = $"Продукт {product.Name} перестал продаваться. Пользователь:{request.User.Identity.Name}",
                     Date = DateTime.Now,
@@ -97,7 +97,7 @@ namespace Store.Web.Application.Product.Commands
 
             product.IsOnTrade = !product.IsOnTrade;
 
-            note = new HistoryNote()
+            note = new Models.HistoryNote()
             {
                 Message = $"Продукт {product.Name} начал продаваться. Пользователь:{request.User.Identity.Name}",
                 Date = DateTime.Now,
