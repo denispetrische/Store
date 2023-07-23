@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Store.Web.Abstractions.Data;
 using Store.Web.Models;
 
@@ -16,15 +17,19 @@ namespace Store.Web.Data
 
         public async Task CreateHistoryNote(HistoryNote historyNote)
         {
-            await _context.Database.ExecuteSqlRawAsync($"CreateHistoryNote '{historyNote.Id}', " +
-                                                          $"N'{historyNote.Message}', " +
-                                                          $"'{historyNote.Date.ToString(format)}', " +
-                                                          $"'{historyNote.UserId}'");
+            var param1 = new SqlParameter("@Id", historyNote.Id);
+            var param2 = new SqlParameter("@Message", historyNote.Message);
+            var param3 = new SqlParameter("@Date", historyNote.Date);
+            var param4 = new SqlParameter("@UserId", historyNote.UserId);
+
+            await _context.Database.ExecuteSqlRawAsync($"CreateHistoryNote @Id, @Message, @Date, @UserId",
+                                                        param1, param2, param3, param4);
         }
 
         public async Task<IReadOnlyList<HistoryNote>> GetAllHistoryNotesLastDay()
         {
-            var notes = _context.HistoryNotes.FromSqlRaw($"GetAllHistoryNotesLastDay '{DateTime.Now.AddDays(-1).ToString(format)}'").ToList();
+            var param1 = new SqlParameter("@Date", DateTime.Now.AddDays(-1).ToString(format));
+            var notes = _context.HistoryNotes.FromSqlRaw($"GetAllHistoryNotesLastDay @Date", param1).ToList();
 
             return notes;
         }
@@ -38,7 +43,10 @@ namespace Store.Web.Data
 
         public async Task<IReadOnlyList<HistoryNote>> GetHistoryNotesForUserLastMonth(string id)
         {
-            var notes = _context.HistoryNotes.FromSqlRaw($"GetHistoryNotesForUserLastMonth '{id}', '{DateTime.Now.AddMonths(-1).ToString(format)}'").ToList();
+            var param1 = new SqlParameter("@UserId", id);
+            var param2 = new SqlParameter("@Date", DateTime.Now.AddMonths(-1).ToString(format));
+
+            var notes = _context.HistoryNotes.FromSqlRaw($"GetHistoryNotesForUserLastMonth @UserId, @Date", param1, param2).ToList();
 
             return notes;
         }
