@@ -1,76 +1,111 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Store.Web.Abstractions.Data;
 using Store.Web.Models;
+using System.Xml.Linq;
 
 namespace Store.Web.Data
 {
-    public class ProductRepo : IProductRepo
+    public class ProductRepo : IProductRepo<Product>
     {
         private readonly StoreWebContext _context;
+        private string format = "yyyy-MM-dd HH:mm:ss";
 
         public ProductRepo(StoreWebContext context)
         {
             _context = context;
         }
 
-        public Task CreateProduct(Product product)
+        public async Task CreateProduct(Product product)
         {
-            string format = "yyyy-MM-dd HH:mm:ss";
-            _context.Database.ExecuteSqlRaw($"CreateProduct '{product.Id}', " +
-                                                          $"'{product.Name}', " +
-                                                          $"'{product.Description}', " +
-                                                          $"'{product.IsOnTrade}', " +
-                                                          $"'{product.ReceiptDate.ToString(format)}', " +
-                                                          $"'{product.ExpireDate.ToString(format)}', " +
-                                                          $"'{product.Amount}', " +
-                                                          $"'{product.Price}', " +
-                                                          $"'{product.Currency}'");
+            var param1 = new SqlParameter("@Id", product.Id);
+            var param2 = new SqlParameter("@Name", product.Name);
+            var param3 = new SqlParameter("@Description", product.Description);
+            var param4 = new SqlParameter("@IsOnTrade", product.IsOnTrade);
+            var param5 = new SqlParameter("@ReceiptDate", product.ReceiptDate.ToString(format));
+            var param6 = new SqlParameter("@ExpireDate", product.ExpireDate.ToString(format));
+            var param7 = new SqlParameter("@Amount", product.Amount);
+            var param8 = new SqlParameter("@Price", product.Price);
+            var param9 = new SqlParameter("@Currency", product.Currency);
 
-            return Task.CompletedTask;
+            await _context.Database.ExecuteSqlRawAsync($"CreateProduct @Id, " +
+                                                                     $"@Name, " +
+                                                                     $"@Description, " +
+                                                                     $"@IsOnTrade, " +
+                                                                     $"@ReceiptDate, " +
+                                                                     $"@ExpireDate, " +
+                                                                     $"@Amount, " +
+                                                                     $"@Price, " +
+                                                                     $"@Currency",
+                                                                     param1,
+                                                                     param2,
+                                                                     param3,
+                                                                     param4,
+                                                                     param5,
+                                                                     param6,
+                                                                     param7,
+                                                                     param8,
+                                                                     param9);
         }
 
-        public Task DeleteProductById(string id)
+        public async Task DeleteProductById(string id)
         {
-            _context.Database.ExecuteSqlRawAsync($"DeleteProductById '{id}'");
-
-            return Task.CompletedTask;
+            var param1 = new SqlParameter("@Id", id);
+            await _context.Database.ExecuteSqlRawAsync($"DeleteProductById @Id", param1);
         }
 
-        public Task<Product> GetProductById(string id)
+        public async Task<Product> GetProductById(string id)
         {
-            Product product = _context.Products.FromSqlRaw($"GetProductById '{id}'").AsEnumerable().FirstOrDefault();
+            var param1 = new SqlParameter("@Id", id);
+            Product product = _context.Products.FromSqlRaw($"GetProductById @Id", param1).AsEnumerable().FirstOrDefault();
 
-            return Task.FromResult(product);
+            return product;
         }
 
-        public Task<List<Product>> GetProducts()
+        public async Task<IReadOnlyList<Product>> GetProducts()
         {
             var products = _context.Products.FromSqlRaw("GetProducts").ToList();
 
-            return Task.FromResult(products);
+            return products;
         }
 
-        public Task<List<Product>> GetProductsForMarket()
+        public async Task<IReadOnlyList<Product>> GetProductsForMarket()
         {
             var products = _context.Products.FromSqlRaw("GetProductsForMarket").ToList();
 
-            return Task.FromResult(products);
+            return products;
         }
 
-        public Task UpdateProduct(Product product)
+        public async Task UpdateProduct(Product product)
         {
-            string format = "yyyy-MM-dd HH:mm:ss";
-            _context.Database.ExecuteSqlRaw($"UpdateProduct '{product.Id}', " +
-                                                          $"'{product.Name}', " +
-                                                          $"'{product.Description}', " +
-                                                          $"'{product.IsOnTrade}', " +
-                                                          $"'{product.ReceiptDate.ToString(format)}', " +
-                                                          $"'{product.ExpireDate.ToString(format)}', " +
-                                                          $"'{product.Amount}', " +
-                                                          $"'{product.Price}', " +
-                                                          $"'{product.Currency}'");
+            var param1 = new SqlParameter("@Id", product.Id);
+            var param2 = new SqlParameter("@Name", product.Name);
+            var param3 = new SqlParameter("@Description", product.Description);
+            var param4 = new SqlParameter("@IsOnTrade", product.IsOnTrade);
+            var param5 = new SqlParameter("@ReceiptDate", product.ReceiptDate.ToString(format));
+            var param6 = new SqlParameter("@ExpireDate", product.ExpireDate.ToString(format));
+            var param7 = new SqlParameter("@Amount", product.Amount);
+            var param8 = new SqlParameter("@Price", product.Price);
+            var param9 = new SqlParameter("@Currency", product.Currency);
 
-            return Task.CompletedTask;
+            await _context.Database.ExecuteSqlRawAsync($"UpdateProduct @Id, " +
+                                                                     $"@Name, " +
+                                                                     $"@Description, " +
+                                                                     $"@IsOnTrade, " +
+                                                                     $"@ReceiptDate, " +
+                                                                     $"@ExpireDate, " +
+                                                                     $"@Amount, " +
+                                                                     $"@Price, " +
+                                                                     $"@Currency",
+                                                                     param1,
+                                                                     param2,
+                                                                     param3,
+                                                                     param4,
+                                                                     param5,
+                                                                     param6,
+                                                                     param7,
+                                                                     param8,
+                                                                     param9);
         }
     }
 }

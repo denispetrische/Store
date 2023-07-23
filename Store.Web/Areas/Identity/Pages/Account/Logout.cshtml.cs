@@ -19,12 +19,12 @@ namespace Store.Web.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
-        private readonly IHistoryNoteRepo _historyNoteRepo;
+        private readonly IHistoryNoteRepo<HistoryNote> _historyNoteRepo;
         private readonly UserManager<IdentityUser> _userManager;
 
         public LogoutModel(SignInManager<IdentityUser> signInManager, 
                            ILogger<LogoutModel> logger,
-                           IHistoryNoteRepo historyNoteRepo,
+                           IHistoryNoteRepo<HistoryNote> historyNoteRepo,
                            UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;

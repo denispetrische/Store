@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[GetProducts]
 AS
 BEGIN
-	SELECT * FROM Products
+	SELECT * FROM Products ORDER BY ReceiptDate DESC
 END;

@@ -1,41 +1,22 @@
-﻿using AutoMapper;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Store.Web.Abstractions.Data;
-using Store.Web.Dtos.HistoryNote;
-using Store.Web.Models;
+using Store.Web.Application.HistoryNote.Queries;
 
 namespace Store.Web.Controllers
 {
     public class HistoryController : Controller
     {
-        private readonly IHistoryNoteRepo _repo;
-        private readonly IMapper _mapper;
-        private readonly ILogger<HistoryController> _logger;
+        private readonly IMediator _mediator;
 
-        public HistoryController(IHistoryNoteRepo repo, 
-                                 IMapper mapper,
-                                 ILogger<HistoryController> logger)
+        public HistoryController(IMediator mediator)
         {
-            _repo = repo;
-            _mapper = mapper;
-            _logger = logger;
+            _mediator = mediator;
         }
 
-        public IActionResult HistoryMainView()
+        public async Task<IActionResult> HistoryMainView()
         {
-            List<HistoryNote> notes = null;
-            
-            try
-            {
-                notes = _repo.GetHistoryNotes().Result.OrderByDescending(n => n.Date).ToList();
-                _logger.LogInformation("HistoryMainView: notes was successfully received");
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"HistoryMainView: unable to get notes. Reason: {e.Message}");
-            }
-            
-            return View(_mapper.Map<List<HistoryNote>,List<HistoryNoteHistoryViewDto>>(notes));
+            var notes = await _mediator.Send(new GetHistoryNotesQuery());
+            return View(notes);
         }
     }
 }

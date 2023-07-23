@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[GetHistoryNotes]
 AS
 BEGIN
-	SELECT * FROM HistoryNotes
+	SELECT * FROM HistoryNotes ORDER BY Date DESC
 END;
