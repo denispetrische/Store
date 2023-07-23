@@ -1,9 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Store.Web.Abstractions.Data;
-using Store.Web.Dtos.HistoryNote;
-using Store.Web.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Store.Web.Application.HistoryNote.Queries;
 

@@ -1,12 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using NuGet.Protocol.Plugins;
 using Store.Web.Abstractions.Data;
 using Store.Web.Constants;
-using Store.Web.Controllers;
-using Store.Web.Dtos.Product;
-using Store.Web.Models;
 
 namespace Store.Web.Application.Product.Commands
 {
@@ -14,12 +9,12 @@ namespace Store.Web.Application.Product.Commands
     {
         private readonly IMapper _mapper;
         private readonly IProductRepo<Models.Product> _repoProduct;
-        private readonly ILogger<StoreController> _logger;
+        private readonly ILogger<AddProductCommandHandler> _logger;
         private readonly AppConstants _constants;
 
         public AddProductCommandHandler(IMapper mapper,
                                         IProductRepo<Models.Product> repoProduct,
-                                        ILogger<StoreController> logger)
+                                        ILogger<AddProductCommandHandler> logger)
         {
             _mapper = mapper;
             _repoProduct = repoProduct;

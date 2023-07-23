@@ -12,7 +12,9 @@ namespace Store.Web.Application.Product.Queries
         private readonly IMapper _mapper;
         private readonly ILogger<GetProductsCommandHandler> _logger;
 
-        public GetProductsCommandHandler(IProductRepo<Store.Web.Models.Product> productRepo, IMapper mapper, ILogger<GetProductsCommandHandler> logger)
+        public GetProductsCommandHandler(IProductRepo<Store.Web.Models.Product> productRepo, 
+                                         IMapper mapper, 
+                                         ILogger<GetProductsCommandHandler> logger)
         {
             _productRepo = productRepo;
             _mapper = mapper;
