@@ -56,24 +56,30 @@ namespace Store.Web.Data
 
         public async Task<Product> GetProductById(string id)
         {
-            var param1 = new SqlParameter("@Id", id);
-            Product product = _context.Products.FromSqlRaw($"GetProductById @Id", param1).AsEnumerable().FirstOrDefault();
-
-            return product;
+            return await Task.Factory.StartNew<Product>(() =>
+            {
+                var param1 = new SqlParameter("@Id", id);
+                Product product = _context.Products.FromSqlRaw($"GetProductById @Id", param1).AsEnumerable().FirstOrDefault();
+                return product;
+            });
         }
 
         public async Task<IReadOnlyList<Product>> GetProducts()
         {
-            var products = _context.Products.FromSqlRaw("GetProducts").ToList();
-
-            return products;
+            return await Task.Factory.StartNew<IReadOnlyList<Product>>(() =>
+            {
+                var products = _context.Products.FromSqlRaw("GetProducts").ToList();
+                return products;
+            });
         }
 
         public async Task<IReadOnlyList<Product>> GetProductsForMarket()
         {
-            var products = _context.Products.FromSqlRaw("GetProductsForMarket").ToList();
-
-            return products;
+            return await Task.Factory.StartNew<IReadOnlyList<Product>>(() =>
+            {
+                var products = _context.Products.FromSqlRaw("GetProductsForMarket").ToList();
+                return products;
+            });
         }
 
         public async Task UpdateProduct(Product product)
