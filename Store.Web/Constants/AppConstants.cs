@@ -1,10 +1,10 @@
 ﻿namespace Store.Web.Constants
 {
-    public class AppConstants
+    public static class AppConstants
     {
-        public readonly TimeSpan _expireTime;
+        public static readonly TimeSpan _expireTime;
 
-        public AppConstants()
+        static AppConstants()
         {
             _expireTime = new TimeSpan(5,0,0,0);
         }

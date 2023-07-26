@@ -10,7 +10,6 @@ namespace Store.Web.Application.Product.Commands
         private readonly IMapper _mapper;
         private readonly IProductRepo<Models.Product> _repoProduct;
         private readonly ILogger<AddProductCommandHandler> _logger;
-        private readonly AppConstants _constants;
 
         public AddProductCommandHandler(IMapper mapper,
                                         IProductRepo<Models.Product> repoProduct,
@@ -19,15 +18,13 @@ namespace Store.Web.Application.Product.Commands
             _mapper = mapper;
             _repoProduct = repoProduct;
             _logger = logger;
-            _constants = new AppConstants();
-
         }
 
         public async Task Handle(AddProductCommand request, CancellationToken cancellationToken)
         {
             var product = _mapper.Map<Models.Product>(request.ProductDto);
             product.ReceiptDate = DateTime.Now;
-            product.ExpireDate = DateTime.Now.Add(_constants._expireTime);
+            product.ExpireDate = DateTime.Now.Add(AppConstants._expireTime);
 
             try
             {

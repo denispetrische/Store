@@ -102,7 +102,6 @@ namespace Store.Web.Seeders
 
                 //Create Products
 
-                var constants = new AppConstants();
                 var products = new Product[]
                 {
                     new Product()
@@ -110,7 +109,7 @@ namespace Store.Web.Seeders
                         Name = "Banana",
                         Description = "Yellow bananas from Ecuador",
                         ReceiptDate = DateTime.Now,
-                        ExpireDate = DateTime.Now.Add(constants._expireTime),
+                        ExpireDate = DateTime.Now.Add(AppConstants._expireTime),
                         Amount = 10,
                         Price = 10,
                         Currency = "BYN"
@@ -120,7 +119,7 @@ namespace Store.Web.Seeders
                         Name = "Computer",
                         Description = "Powerfull and new",
                         ReceiptDate = DateTime.Now,
-                        ExpireDate = DateTime.Now.Add(constants._expireTime),
+                        ExpireDate = DateTime.Now.Add(AppConstants._expireTime),
                         Amount = 1,
                         Price = 1000,
                         Currency = "GBP"
@@ -130,7 +129,7 @@ namespace Store.Web.Seeders
                         Name = "Mineral Water",
                         Description = "Made in Georgia",
                         ReceiptDate = DateTime.Now,
-                        ExpireDate = DateTime.Now.Add(constants._expireTime),
+                        ExpireDate = DateTime.Now.Add(AppConstants._expireTime),
                         Amount = 256,
                         Price = 5
                     }
