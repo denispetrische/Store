@@ -3,11 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Store.Web.Abstractions.Data;
 using Store.Web.Data;
 using Store.Web.Seeders;
-using AutoMapper;
 using Store.Web.Models;
 using System.Reflection;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog((ctx, lc) => lc
+    .WriteTo.Console()
+    .WriteTo.Debug()
+    .ReadFrom.Configuration(ctx.Configuration));
 var connectionString = builder.Configuration.GetConnectionString("StoreWebContextConnection") ?? throw new InvalidOperationException("Connection string 'StoreWebContextConnection' not found.");
 
 builder.Services.AddDbContext<StoreWebContext>(options =>
