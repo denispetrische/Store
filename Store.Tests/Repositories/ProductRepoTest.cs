@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Store.Web.Abstractions.Data;
 using Store.Web.Constants;
+using Store.Web.Data;
 using Store.Web.Models;
 
 namespace Store.Tests.Repositories
@@ -8,10 +9,17 @@ namespace Store.Tests.Repositories
     public class ProductRepoTest
     {
         [Fact]
-        public void GetProductsTest()
+        public async void GetProductsTest()
         {
+            //arrange
             var mock = new Mock<IProductRepo<Product>>();
             mock.Setup(repo => repo.GetProducts()).Returns(GetProducts());
+
+            //act
+            var products = await mock.Object.GetProducts();
+
+            //assert
+            Assert.Equal(products.Count, GetProducts().Result.Count);
         }
 
         private async Task<IReadOnlyList<Product>> GetProducts()
